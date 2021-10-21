@@ -19,6 +19,7 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(ur_client_library REQUIRED)
 find_package(ur_dashboard_msgs REQUIRED)
+find_package(rclpy REQUIRED)
 
 include_directories(include)
 
@@ -84,10 +85,6 @@ ament_export_libraries(
   ur_robot_driver_plugin
 )
 
-install(PROGRAMS scripts/tool_communication scripts/wait_dashboard_server.sh
-  DESTINATION bin
-)
-
 install(DIRECTORY resources
   DESTINATION share/${PROJECT_NAME}
 )
@@ -103,6 +100,19 @@ ament_export_dependencies(
   rclcpp
   rclcpp_lifecycle
   ${THIS_PACKAGE_INCLUDE_DEPENDS}
+)
+
+# Install Python execs
+ament_python_install_package(${PROJECT_NAME})
+
+# Install Python executables
+install(PROGRAMS
+  scripts/tool_communication.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+install(PROGRAMS scripts/wait_dashboard_server.sh
+  DESTINATION bin
 )
 
 ament_package()
