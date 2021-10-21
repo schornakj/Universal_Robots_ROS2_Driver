@@ -45,6 +45,7 @@ def launch_setup(context, *args, **kwargs):
     headless_mode = LaunchConfiguration("headless_mode")
     launch_dashboard_client = LaunchConfiguration("launch_dashboard_client")
     ci_testing = LaunchConfiguration("ci_testing")
+    use_tool_communication = LaunchConfiguration("use_tool_communication")
 
     joint_limit_params = PathJoinSubstitution(
         [FindPackageShare(description_package), "config", ur_type, "joint_limits.yaml"]
@@ -121,6 +122,9 @@ def launch_setup(context, *args, **kwargs):
             " ",
             "headless_mode:=",
             headless_mode,
+            " ",
+            "use_tool_communication:=",
+            use_tool_communication,
             " ",
         ]
     )
@@ -360,6 +364,11 @@ def generate_launch_description():
     )
     declared_arguments.append(
         DeclareLaunchArgument("ci_testing", default_value="false", description="Running ci tests?")
+    )
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "use_tool_communication", default_value="false", description="Running ci tests?"
+        )
     )
 
     return LaunchDescription(declared_arguments + [OpaqueFunction(function=launch_setup)])
