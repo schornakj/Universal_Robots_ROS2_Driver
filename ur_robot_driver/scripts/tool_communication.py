@@ -52,7 +52,11 @@ class UrToolCommunication(Node):
         # Additionally, a symlink at the given location will be created. Use an absolute path here.
         self.declare_parameter("device_name", "/tmp/ttyUR")
         local_device = self.get_parameter("device_name").get_parameter_value().string_value
-
+        # Set whether to run the socat command through the shell.
+        # This is needed to support running the tool comms script within a Docker container.
+        self.declare_parameter("use_shell", True)
+        use_shell = self.get_parameter("use_shell").get_parameter_value().bool_value
+        
         self.get_logger().info("Remote device is available at '" + local_device + "'")
 
         cfg_params = ["pty"]
@@ -66,7 +70,7 @@ class UrToolCommunication(Node):
         cmd.append(":".join(["tcp", robot_ip, str(tcp_port)]))
 
         self.get_logger().info("Starting socat with following command:\n" + " ".join(cmd))
-        subprocess.call(cmd)
+        subprocess.call(cmd, shell=use_shell)
 
 
 def main():
